@@ -1,10 +1,9 @@
-
-Latency: 26.92 ms
-Download: 12.93 Mbps
-Upload: 6.62 Mbps
-Latency: 31.24 ms
-Download: 6.51 Mbps
-Upload: 6.11 Mbps
-Latency: 30.69 ms
-Download: 14.41 Mbps
-Upload: 7.10 Mbps
+Latency: 3.23 ms
+Download: 97.73 Mbps
+Upload: 19.66 Mbps
+Latency: 3.32 ms
+Download: 98.20 Mbps
+Upload: 19.65 Mbps
+Latency: 3.57 ms
+Download: 68.57 Mbps
+Upload: 9.79 Mbps
