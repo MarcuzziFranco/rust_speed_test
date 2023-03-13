@@ -6,6 +6,7 @@ use std::thread::sleep;
 use std::time::Duration;
 use regex::Regex;
 use std::env;
+use chrono::prelude::*;
 
 fn main() {
     let args:Vec<String> = env::args().collect();
@@ -62,8 +63,16 @@ fn run_speed_test(){
                 panic!("No se pudo escribir en el archivo: {}", why);
             }
         }
+        let now = Local::now();
+
+        //Extrae la hora y minutos en formato de cadena
+        let hora_minutos = now.format("%H:%M").to_string();
+        if let Err(why) = writeln!(file, "{}", hora_minutos) {
+            panic!("No se pudo escribir en el archivo: {}", why);
+        }
 
         sleep(Duration::from_secs(40));
+
           counter += 1;
      }
 }
