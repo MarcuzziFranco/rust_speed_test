@@ -1,29 +1,36 @@
-use std::process::Command;
-use std::fs::OpenOptions;
-use std::fs;
-use std::io::Write;
-use std::thread::sleep;
-use std::time::Duration;
+use chrono::prelude::*;
 use regex::Regex;
 use std::env;
-use chrono::prelude::*;
+use std::fs;
+use std::fs::OpenOptions;
+use std::io::Write;
+use std::process::Command;
+use std::thread::sleep;
+use std::time::Duration;
 
 fn main() {
-    let args:Vec<String> = env::args().collect();
+    let args: Vec<String> = env::args().collect();
+    let filepath = "ping_output.txt";
 
     if args.len() > 1 {
-        let command : String = args[1].parse().unwrap();
-        if command == "data" {calculate_file_speed_test();}    
-        else {println!("Error command:{} not exist",command);}
-
-    }else {
+        let command: String = args[1].parse().unwrap();
+        if command == "show-file" {
+            calculate_file_speed_test();
+        } else if command == "cls-file" {
+            match clear_file_txt(filepath) {
+                Ok(_) => println!("File clear successfully"),
+                Err(e) => eprint!("Error clear file:{}", e),
+            }
+        } else {
+            println!("Error command:{} not exist", command);
+        }
+    } else {
         println!("Ejecuta speedTest");
         run_speed_test();
     }
-   
 }
 
-fn get_data_speedtest(input:String)-> Vec<String>{
+fn get_data_speedtest(input: String) -> Vec<String> {
     let re = Regex::new(r"(Latency|Download|Upload):\s+(\d+(?:\.\d+)?)\s+(\w+)").unwrap();
     let mut results = Vec::new();
 
@@ -37,7 +44,7 @@ fn get_data_speedtest(input:String)-> Vec<String>{
     results
 }
 
-fn run_speed_test(){
+fn run_speed_test() {
     let mut counter = 0;
 
     loop {
@@ -46,17 +53,17 @@ fn run_speed_test(){
         }
 
         let output = Command::new("speedtest")
-        .output()
-        .expect("failed to execute process");
+            .output()
+            .expect("!!!!Failed to execute process!!!");
 
-        let result = String::from_utf8_lossy(&output.stdout); 
+        let result = String::from_utf8_lossy(&output.stdout);
         let info_speed_test = get_data_speedtest(result.to_string());
 
         let mut file = OpenOptions::new()
-        .append(true)
-        .create(true)
-        .open("ping_output.txt")
-        .expect("failed to open file");
+            .append(true)
+            .create(true)
+            .open("ping_output.txt")
+            .expect("failed to open file");
 
         for data in &info_speed_test {
             if let Err(why) = writeln!(file, "{}", data) {
@@ -73,15 +80,15 @@ fn run_speed_test(){
 
         sleep(Duration::from_secs(40));
 
-          counter += 1;
-     }
+        counter += 1;
+    }
 }
 
-fn calculate_file_speed_test(){
-    let contents = fs::read_to_string("ping_output.txt").unwrap(); 
+fn calculate_file_speed_test() {
+    let contents = fs::read_to_string("ping_output.txt").unwrap();
 
     let re = Regex::new(r"[-]?\d*\.\d+").unwrap();
-    
+
     let mut latency: Vec<f32> = vec![];
     let mut download: Vec<f32> = vec![];
     let mut upload: Vec<f32> = vec![];
@@ -110,8 +117,11 @@ fn calculate_file_speed_test(){
 fn calculate_average(values: &Vec<f32>) -> f32 {
     let sum: f32 = values.iter().sum();
     let len: f32 = values.len() as f32;
-    
+
     sum / len
 }
 
-
+fn clear_file_txt(path: &str) -> std::io::Result<()> {
+    OpenOptions::new().write(true).truncate(true).open(path)?;
+    Ok(())
+}
