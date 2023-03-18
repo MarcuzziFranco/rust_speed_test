@@ -8,26 +8,42 @@ use std::process::Command;
 use std::thread::sleep;
 use std::time::Duration;
 
+use crate::setting::Config;
+
+mod setting;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let filepath = "ping_output.txt";
+    //let filepath = "ping_output.txt";
+
+    let config: Config = load_setting();
 
     if args.len() > 1 {
         let command: String = args[1].parse().unwrap();
-        if command == "show-file" {
-            calculate_file_speed_test();
-        } else if command == "cls-file" {
-            match clear_file_txt(filepath) {
-                Ok(_) => println!("File clear successfully"),
-                Err(e) => eprint!("Error clear file:{}", e),
-            }
-        } else {
-            println!("Error command:{} not exist", command);
-        }
-    } else {
-        println!("Ejecuta speedTest");
-        run_speed_test();
+        run_program(command, config)
     }
+}
+
+fn run_program(command: String, config: Config) {
+    match command.as_str() {
+        code if code == &config.command_run => run_speed_test(),
+        code if code == &config.command_show => calculate_file_speed_test(),
+        code if code == &config.command_cls => match clear_file_txt(&config.filepath) {
+            Ok(_) => println!("File cleared successfully"),
+            Err(e) => eprint!("Error clearing file: {}", e),
+        },
+        _ => println!("Error: Command '{}' not exist", command),
+    }
+}
+
+fn load_setting() -> Config {
+    let config: Config = match fs::read_to_string("setting.json") {
+        Ok(config_str) => serde_json::from_str(&config_str),
+        Err(_) => panic!("Failed to read config file"),
+    }
+    .unwrap();
+
+    config
 }
 
 fn get_data_speedtest(input: String) -> Vec<String> {

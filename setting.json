@@ -1,4 +1,8 @@
 {
+    "command_run": "c-report",
+    "command_show": "show-file",
+    "command_cls": "cls-file",
+    "filepath": "Internet-report.txt",
     "iteration": 3,
     "interval": 40,
     "init_from": "",

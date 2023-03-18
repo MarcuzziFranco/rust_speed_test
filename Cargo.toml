@@ -9,3 +9,6 @@ edition = "2021"
 regex = "1.5.4"
 chrono = "0.4"
 serde_json = "1.0.94"
+serde = { version = "1.0", features = ["derive"] }
+
+
