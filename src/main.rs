@@ -29,7 +29,11 @@ fn run_program(command: String, config: Config) {
             Ok(_) => println!("File cleared successfully"),
             Err(e) => eprint!("Error clearing file: {}", e),
         },
-        _ => println!("Error: Command '{}' not exist", command),
+        code if code == &config.command_help => help(config),
+        _ => {
+            println!("Error: Command '{}' not exist", command);
+            println!("Run help command to see available commands");
+        }
     }
 }
 
@@ -136,4 +140,14 @@ fn calculate_average(values: &Vec<f32>) -> f32 {
 fn clear_file_txt(path: &str) -> std::io::Result<()> {
     OpenOptions::new().write(true).truncate(true).open(path)?;
     Ok(())
+}
+
+fn help(config: Config) {
+    println!("-----------------------------------------------");
+    println!("Commands action program");
+    println!("-----------------------------------------------");
+    println!("  Execute create report:<{}>", config.command_run);
+    println!("  Execute show report:<{}>", config.command_show);
+    println!("  Execute clear report:<{}>", config.command_cls);
+    println!("-----------------------------------------------");
 }
