@@ -6,6 +6,7 @@ pub struct Config {
     pub command_show: String,
     pub command_cls: String,
     pub command_help: String,
+    pub command_metric: String,
     pub filepath: String,
     pub iteration: u32,
 }

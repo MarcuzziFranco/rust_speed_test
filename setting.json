@@ -2,6 +2,7 @@
     "command_run": "c-report",
     "command_show": "show-file",
     "command_cls": "cls-file",
+    "command_metric": "mg-file",
     "command_help": "help",
     "filepath": "Internet-report.txt",
     "iteration": 3
