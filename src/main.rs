@@ -1,8 +1,7 @@
 use crate::metric::Metric;
 use crate::setting::Config;
 use chrono::prelude::*;
-
-use plotters::prelude::BitMapBackend;
+use plotters::prelude::BitMapBackend; 
 use plotters::prelude::ChartBuilder;
 use plotters::prelude::IntoDrawingArea;
 use plotters::series::LineSeries;
@@ -168,11 +167,13 @@ fn create_graphic_metric(path: &str) -> Result<(), Box<dyn std::error::Error>> {
     let metric: Metric = get_infomation_file(path);
 
     let root = BitMapBackend::new("plot.png", (800, 600)).into_drawing_area();
-    root.fill(&WHITE);
+    root.fill(&WHITE)?;
 
     let mut chart = ChartBuilder::on(&root)
-        .caption("Conexión vs Tiempo", ("Arial", 30).into_font())
+        .caption("Connection vs tiempo", ("Arial", 30).into_font())
         .build_cartesian_2d(0.0..100.0, 0.0..100.0)?;
+
+    chart.configure_mesh().draw()?;
 
     chart
         .draw_series(LineSeries::new(
@@ -187,6 +188,9 @@ fn create_graphic_metric(path: &str) -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+
+
 
 fn calculate_average(values: &Vec<f32>) -> f32 {
     let sum: f32 = values.iter().sum();
